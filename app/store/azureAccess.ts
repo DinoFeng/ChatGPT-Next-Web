@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { useAccessStore } from "./access";
-// import { queryMeta } from "../utils";
+const accessStore = useAccessStore.getState();
 
 export interface AzureAccessControlStore {
   apiKey: string;
@@ -58,7 +58,6 @@ export const useAzureAccessStore = create<AzureAccessControlStore>()(
         set((state) => ({ apiVersion }));
       },
       updateApiKey(apiKey: string) {
-        const accessStore = useAccessStore.getState();
         accessStore.updateToken(apiKey);
         set((state) => ({ apiKey }));
       },

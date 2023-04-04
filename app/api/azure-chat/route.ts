@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
       return new Response(msg);
     } else {
       console.warn("[not msg],just result:", result);
-      return new Response(result);
+      return new Response(JSON.stringify(result));
     }
   } catch (error) {
     console.error("[Chat Stream]", error);

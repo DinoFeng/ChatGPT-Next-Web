@@ -37,9 +37,12 @@ export function Loading(props: { noLogo?: boolean }) {
   );
 }
 
-const Settings = dynamic(async () => (await import("./settings")).Settings, {
-  loading: () => <Loading noLogo />,
-});
+const Settings = dynamic(
+  async () => (await import("./azure-settings")).Settings,
+  {
+    loading: () => <Loading noLogo />,
+  },
+);
 
 function useSwitchTheme() {
   const config = useChatStore((state) => state.config);
@@ -74,12 +77,6 @@ const useHasHydrated = () => {
 
 function _Home() {
   const accessStore = useAccessStore();
-  const enabledAdvancedControl = useMemo(
-    () => accessStore.enabledAdvancedControl(),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [],
-  );
-
   const [createNewSession, currentIndex, removeSession] = useChatStore(
     (state) => [
       state.newSession,
@@ -143,7 +140,7 @@ function _Home() {
                 }}
               />
             </div>
-            {enabledAdvancedControl ? (
+            {accessStore.enabledAdvancedControl() ? (
               <div className={styles["sidebar-action"]}>
                 <IconButton
                   icon={<SettingsIcon />}
@@ -157,7 +154,7 @@ function _Home() {
             ) : (
               <></>
             )}
-            {enabledAdvancedControl ? (
+            {/* {accessStore.enabledAdvancedControl() ? (
               <div className={styles["sidebar-action"]}>
                 <a href={REPO_URL} target="_blank">
                   <IconButton icon={<GithubIcon />} shadow />
@@ -165,7 +162,7 @@ function _Home() {
               </div>
             ) : (
               <></>
-            )}
+            )} */}
           </div>
           <div>
             <IconButton
