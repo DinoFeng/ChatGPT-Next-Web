@@ -9,6 +9,8 @@ export interface AccessControlStore {
   updateToken: (_: string) => void;
   updateCode: (_: string) => void;
   enabledAccessControl: () => boolean;
+  enabledAdvancedControl: () => boolean;
+  getAccessCode: () => string;
 }
 
 export const ACCESS_KEY = "access-control";
@@ -27,10 +29,20 @@ export const useAccessStore = create<AccessControlStore>()(
       updateToken(token: string) {
         set((state) => ({ token }));
       },
+      enabledAdvancedControl() {
+        return queryMeta("isAdvanced") === "true";
+      },
+      getAccessCode() {
+        const defaultAccessCode = !this.enabledAdvancedControl()
+          ? queryMeta("accessCode")
+          : "";
+        console.debug({ defaultAccessCode, x: queryMeta("accessCode") });
+        return this.accessCode || defaultAccessCode;
+      },
     }),
     {
       name: ACCESS_KEY,
       version: 1,
-    }
-  )
+    },
+  ),
 );

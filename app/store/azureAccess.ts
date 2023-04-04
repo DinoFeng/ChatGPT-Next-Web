@@ -1,5 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { useAccessStore } from "./access";
+// import { queryMeta } from "../utils";
 
 export interface AzureAccessControlStore {
   apiKey: string;
@@ -7,6 +9,8 @@ export interface AzureAccessControlStore {
   deploymentId: string;
   apiVersion: string;
   isDefault: boolean;
+  getAzureConfig: () => string;
+  // isAdvanced: () => boolean;
   setDefaultAccess: (_: boolean) => void;
   updateSourceName: (_: string) => void;
   updateDeploymentId: (_: string) => void;
@@ -24,6 +28,23 @@ export const useAzureAccessStore = create<AzureAccessControlStore>()(
       sourceName: "",
       deploymentId: "",
       apiVersion: "",
+      getAzureConfig() {
+        if (this.isDefault) {
+          return JSON.stringify({
+            apiKey: this.apiKey,
+            sourceName: this.sourceName,
+            deploymentId: this.deploymentId,
+            apiVersion: this.apiVersion,
+            useAzure: this.isDefault,
+          });
+        } else {
+          return "";
+        }
+      },
+
+      // isAdvanced() {
+      //   return queryMeta("isAdvanced") === "true";
+      // },
       setDefaultAccess(val: boolean) {
         set((state) => ({ isDefault: val }));
       },
@@ -37,6 +58,8 @@ export const useAzureAccessStore = create<AzureAccessControlStore>()(
         set((state) => ({ apiVersion }));
       },
       updateApiKey(apiKey: string) {
+        const accessStore = useAccessStore.getState();
+        accessStore.updateToken(apiKey);
         set((state) => ({ apiKey }));
       },
     }),

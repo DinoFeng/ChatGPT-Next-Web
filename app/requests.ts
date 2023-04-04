@@ -1,9 +1,19 @@
 import type { ChatRequest, ChatReponse } from "./api/openai/typing";
-import { Message, ModelConfig, useAccessStore } from "./store";
+import {
+  Message,
+  ModelConfig,
+  useAccessStore,
+  useAzureAccessStore,
+} from "./store";
 import Locale from "./locales";
 import { showToast } from "./components/ui-lib";
 
 const TIME_OUT_MS = 30000;
+
+const getAzureConfig = (): string => {
+  const accessStore = useAzureAccessStore.getState();
+  return accessStore.getAzureConfig();
+};
 
 const makeRequestParam = (
   messages: Message[],
@@ -33,9 +43,9 @@ function getHeaders() {
   let headers: Record<string, string> = {};
 
   if (accessStore.enabledAccessControl()) {
-    headers["access-code"] = accessStore.accessCode;
+    // headers["access-code"] = accessStore.accessCode;
+    headers["access-code"] = accessStore.getAccessCode();
   }
-
   if (accessStore.token && accessStore.token.length > 0) {
     headers["token"] = accessStore.token;
   }
@@ -51,6 +61,7 @@ export function requestOpenaiClient(path: string) {
         "Content-Type": "application/json",
         "Cache-Control": "no-cache",
         path,
+        azureSetting: getAzureConfig(),
         ...getHeaders(),
       },
       body: body && JSON.stringify(body),
@@ -134,6 +145,7 @@ export async function requestChatStream(
       headers: {
         "Content-Type": "application/json",
         path: "v1/chat/completions",
+        azureSetting: getAzureConfig(),
         ...getHeaders(),
       },
       body: JSON.stringify(req),

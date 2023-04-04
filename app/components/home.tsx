@@ -2,7 +2,7 @@
 
 require("../polyfill");
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import { IconButton } from "./button";
 import styles from "./home.module.scss";
@@ -25,6 +25,8 @@ import { Chat } from "./chat";
 import dynamic from "next/dynamic";
 import { REPO_URL } from "../constant";
 import { ErrorBoundary } from "./error";
+
+import { useAccessStore } from "../store";
 
 export function Loading(props: { noLogo?: boolean }) {
   return (
@@ -71,6 +73,13 @@ const useHasHydrated = () => {
 };
 
 function _Home() {
+  const accessStore = useAccessStore();
+  const enabledAdvancedControl = useMemo(
+    () => accessStore.enabledAdvancedControl(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
   const [createNewSession, currentIndex, removeSession] = useChatStore(
     (state) => [
       state.newSession,
@@ -134,21 +143,29 @@ function _Home() {
                 }}
               />
             </div>
-            <div className={styles["sidebar-action"]}>
-              <IconButton
-                icon={<SettingsIcon />}
-                onClick={() => {
-                  setOpenSettings(true);
-                  setShowSideBar(false);
-                }}
-                shadow
-              />
-            </div>
-            <div className={styles["sidebar-action"]}>
-              <a href={REPO_URL} target="_blank">
-                <IconButton icon={<GithubIcon />} shadow />
-              </a>
-            </div>
+            {enabledAdvancedControl ? (
+              <div className={styles["sidebar-action"]}>
+                <IconButton
+                  icon={<SettingsIcon />}
+                  onClick={() => {
+                    setOpenSettings(true);
+                    setShowSideBar(false);
+                  }}
+                  shadow
+                />
+              </div>
+            ) : (
+              <></>
+            )}
+            {enabledAdvancedControl ? (
+              <div className={styles["sidebar-action"]}>
+                <a href={REPO_URL} target="_blank">
+                  <IconButton icon={<GithubIcon />} shadow />
+                </a>
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
           <div>
             <IconButton

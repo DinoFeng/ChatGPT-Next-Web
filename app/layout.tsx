@@ -4,6 +4,7 @@ import "./styles/markdown.scss";
 import "./styles/highlight.scss";
 import process from "child_process";
 import { ACCESS_CODES, IS_IN_DOCKER } from "./api/access";
+import { IS_ADVANCED, DEF_ACCESS_CODE } from "./api/advanced";
 
 let COMMIT_ID: string | undefined;
 try {
@@ -28,6 +29,8 @@ export const metadata = {
 
 function Meta() {
   const metas = {
+    isAdvanced: `${IS_ADVANCED}`,
+    accessCode: DEF_ACCESS_CODE,
     version: COMMIT_ID ?? "unknown",
     access: ACCESS_CODES.size > 0 || IS_IN_DOCKER ? "enabled" : "disabled",
   };
