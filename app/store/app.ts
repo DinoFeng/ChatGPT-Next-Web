@@ -4,9 +4,10 @@ import { persist } from "zustand/middleware";
 import { type ChatCompletionResponseMessage } from "openai";
 import {
   ControllerPool,
-  requestChatStream,
+  // requestChatStream,
   requestWithPrompt,
 } from "../requests";
+import { requestChatStream } from "../azureRequest";
 import { trimTopic } from "../utils";
 
 import Locale from "../locales";
