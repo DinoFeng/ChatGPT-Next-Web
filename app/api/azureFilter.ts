@@ -21,10 +21,10 @@ export default function redirects(req: NextRequest) {
   const azureSetting = JSON.parse(azureSettingText);
   const { useAzure } = azureSetting;
   console.log({ aiPath, useAzure, accessPath: req.nextUrl.pathname });
-  if (useAzure && req.nextUrl.pathname === API_CHAT_STREAM_PATH) {
-    req.nextUrl.pathname = API_AZURE_CHAT_PATH;
-    return NextResponse.redirect(req.nextUrl);
-  }
+  // if (useAzure && req.nextUrl.pathname === API_CHAT_STREAM_PATH) {
+  //   req.nextUrl.pathname = API_AZURE_CHAT_PATH;
+  //   return NextResponse.redirect(req.nextUrl);
+  // }
   if (useAzure && aiPath === OPENAI_CHAT_PATH) {
     req.headers.set("path", genAzureChatPath(azureSetting));
     return NextResponse.next({

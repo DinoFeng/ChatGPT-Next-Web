@@ -8,7 +8,7 @@ import {
 import Locale from "./locales";
 import { showToast } from "./components/ui-lib";
 
-const TIME_OUT_MS = 30000;
+const TIME_OUT_MS = 120000;
 
 const getAzureConfig = (): string => {
   const accessStore = useAzureAccessStore.getState();

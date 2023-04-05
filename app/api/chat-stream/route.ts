@@ -30,8 +30,18 @@ async function createStream(req: NextRequest) {
           try {
             const json = JSON.parse(data);
             const text = json.choices[0].delta.content;
-            const queue = encoder.encode(text);
-            controller.enqueue(queue);
+            if (text) {
+              console.debug(text);
+              const queue = encoder.encode(text);
+              controller.enqueue(queue);
+            } else {
+              console.log({ json });
+              const stop = json.choices[0].finish_reason;
+              if (stop === "stop") {
+                controller.close();
+                return;
+              }
+            }
           } catch (e) {
             controller.error(e);
           }
