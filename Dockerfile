@@ -15,7 +15,11 @@ FROM base AS builder
 RUN apk update && apk add --no-cache git
 
 ENV OPENAI_API_KEY=""
-ENV CODE=""
+ENV CODE="#{CODE}#"
+ENV BASE_URL=""
+ENV DEPLOYMENT_ID=""
+ENV API_VERSION=""
+ENV IS_ADVANCED="#{IS_ADVANCED}#"
 ARG DOCKER=true
 
 WORKDIR /app
@@ -28,7 +32,11 @@ FROM base AS runner
 WORKDIR /app
 
 ENV OPENAI_API_KEY=""
-ENV CODE=""
+ENV CODE="#{CODE}#"
+ENV BASE_URL=""
+ENV DEPLOYMENT_ID=""
+ENV API_VERSION=""
+ENV IS_ADVANCED="#{IS_ADVANCED}#"
 
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./

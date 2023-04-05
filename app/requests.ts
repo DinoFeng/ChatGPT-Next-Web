@@ -133,7 +133,9 @@ export async function requestChatStream(
     stream: true,
     filterBot: options?.filterBot,
   });
-
+  if (options?.modelConfig) {
+    Object.assign(req, options.modelConfig);
+  }
   console.log("[Request] ", req);
 
   const controller = new AbortController();
