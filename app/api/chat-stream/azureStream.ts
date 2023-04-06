@@ -2,7 +2,7 @@ import { createParser } from "eventsource-parser";
 import { NextRequest } from "next/server";
 import { requestOpenai } from "../common";
 
-export async function createStream(req: NextRequest) {
+export async function createAzureStream(req: NextRequest) {
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
 
