@@ -2,7 +2,7 @@ import { createParser } from "eventsource-parser";
 import { NextRequest } from "next/server";
 import { requestOpenai } from "../common";
 
-async function createStream(req: NextRequest) {
+export async function createStream(req: NextRequest) {
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
 
@@ -58,16 +58,3 @@ async function createStream(req: NextRequest) {
   });
   return stream;
 }
-
-export async function POST(req: NextRequest) {
-  try {
-    const stream = await createStream(req);
-    return new Response(stream);
-  } catch (error) {
-    console.error("[Chat Stream]", error);
-  }
-}
-
-export const config = {
-  runtime: "edge",
-};

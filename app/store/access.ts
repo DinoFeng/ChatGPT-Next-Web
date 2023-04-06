@@ -36,7 +36,6 @@ export const useAccessStore = create<AccessControlStore>()(
         const defaultAccessCode = !this.enabledAdvancedControl()
           ? queryMeta("accessCode")
           : "";
-        console.debug({ defaultAccessCode, x: queryMeta("accessCode") });
         return this.accessCode || defaultAccessCode;
       },
     }),

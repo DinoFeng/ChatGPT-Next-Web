@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ACCESS_CODES } from "./app/api/access";
 import md5 from "spark-md5";
-import redirects from "./app/api/azureFilter"
+import checkAndOverWriteHeadersPath from "./app/api/azureFilter"
 
 export const config = {
-  matcher: ["/api/openai", "/api/chat-stream", "/api/azure-chat"],
+  matcher: ["/api/openai", "/api/chat-stream"],
 };
 
 export function middleware(req: NextRequest) {
@@ -50,11 +50,11 @@ export function middleware(req: NextRequest) {
     console.log("[Auth] set user token");
   }
 
-  return redirects(req);
+  checkAndOverWriteHeadersPath(req);
 
-  // return NextResponse.next({
-  //   request: {
-  //     headers: req.headers,
-  //   },
-  // });
+  return NextResponse.next({
+    request: {
+      headers: req.headers,
+    },
+  });
 }
