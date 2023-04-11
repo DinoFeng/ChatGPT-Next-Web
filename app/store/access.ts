@@ -11,6 +11,7 @@ export interface AccessControlStore {
   enabledAccessControl: () => boolean;
   enabledAdvancedControl: () => boolean;
   getAccessCode: () => string;
+  isAuthorized: () => boolean;
 }
 
 export const ACCESS_KEY = "access-control";
@@ -37,6 +38,9 @@ export const useAccessStore = create<AccessControlStore>()(
           ? queryMeta("accessCode")
           : "";
         return this.accessCode || defaultAccessCode;
+      },
+      isAuthorized() {
+        return !!get().token || !!get().accessCode;
       },
     }),
     {
