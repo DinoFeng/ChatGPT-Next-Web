@@ -52,6 +52,7 @@ function getHeaders() {
     // headers["access-code"] = accessStore.accessCode;
     headers["access-code"] = accessStore.getAccessCode();
   }
+
   if (accessStore.token && accessStore.token.length > 0) {
     headers["token"] = accessStore.token;
   }
@@ -146,9 +147,7 @@ export async function requestChatStream(
     stream: true,
     filterBot: options?.filterBot,
   });
-  if (options?.modelConfig) {
-    Object.assign(req, options.modelConfig);
-  }
+
   console.log("[Request] ", req);
 
   const controller = new AbortController();
@@ -186,7 +185,7 @@ export async function requestChatStream(
         const resTimeoutId = setTimeout(() => finish(), TIME_OUT_MS);
         const content = await reader?.read();
         clearTimeout(resTimeoutId);
-        const text = decoder.decode(content?.value);
+        const text = decoder.decode(content?.value, { stream: true });
         responseText += text;
 
         const done = !content || content.done;
