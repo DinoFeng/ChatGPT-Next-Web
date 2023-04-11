@@ -25,8 +25,8 @@ let fetchState = 0; // 0 not fetch, 1 fetching, 2 done
 export const useAccessStore = create<AccessControlStore>()(
   persist(
     (set, get) => ({
-      token: "",
       accessCode: "",
+      token: "",
       needCode: true,
       isAdvanced: true,
       defaultAccessCode: "",
@@ -68,8 +68,8 @@ export const useAccessStore = create<AccessControlStore>()(
             console.log("[Config] got config from server", res);
             set(() => ({ ...res }));
           })
-          .catch(() => {
-            console.error("[Config] failed to fetch config");
+          .catch((e) => {
+            console.error("[Config] failed to fetch config", e);
           })
           .finally(() => {
             fetchState = 2;
