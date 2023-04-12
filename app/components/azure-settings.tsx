@@ -102,6 +102,11 @@ export function Settings(props: { closeSettings: () => void }) {
     [],
   );
   const azureAccessStore = useAzureAccessStore();
+  const enabledAdvancedControl = useMemo(
+    () => accessStore.enabledAdvancedControl(),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
 
   const promptStore = usePromptStore();
   const builtinCount = SearchService.count.builtin;
@@ -296,91 +301,94 @@ export function Settings(props: { closeSettings: () => void }) {
             ></input>
           </SettingItem>
         </List>
-        <List>
-          <SettingItem
-            title={Locale.Settings.Prompt.Disable.Title}
-            subTitle={Locale.Settings.Prompt.Disable.SubTitle}
-          >
-            <input
-              type="checkbox"
-              checked={config.disablePromptHint}
-              onChange={(e) =>
-                updateConfig(
-                  (config) =>
-                    (config.disablePromptHint = e.currentTarget.checked),
-                )
-              }
-            ></input>
-          </SettingItem>
 
-          <SettingItem
-            title={Locale.Settings.Prompt.List}
-            subTitle={Locale.Settings.Prompt.ListCount(
-              builtinCount,
-              customCount,
-            )}
-          >
-            <IconButton
-              icon={<EditIcon />}
-              text={Locale.Settings.Prompt.Edit}
-              onClick={() => showToast(Locale.WIP)}
-            />
-          </SettingItem>
-        </List>
-        <List>
-          {enabledAccessControl ? (
-            <SettingItem
-              title={Locale.Settings.AccessCode.Title}
-              subTitle={Locale.Settings.AccessCode.SubTitle}
-            >
-              <PasswordInput
-                value={accessStore.accessCode}
-                type="text"
-                placeholder={Locale.Settings.AccessCode.Placeholder}
-                onChange={(e) => {
-                  accessStore.updateCode(e.currentTarget.value);
-                }}
-              />
-            </SettingItem>
-          ) : (
-            <></>
-          )}
+        {enabledAdvancedControl ? (
+          <div>
+            <List>
+              <SettingItem
+                title={Locale.Settings.Prompt.Disable.Title}
+                subTitle={Locale.Settings.Prompt.Disable.SubTitle}
+              >
+                <input
+                  type="checkbox"
+                  checked={config.disablePromptHint}
+                  onChange={(e) =>
+                    updateConfig(
+                      (config) =>
+                        (config.disablePromptHint = e.currentTarget.checked),
+                    )
+                  }
+                ></input>
+              </SettingItem>
 
-          <SettingItem
-            title={Locale.Settings.Token.Title}
-            subTitle={Locale.Settings.Token.SubTitle}
-          >
-            <PasswordInput
-              value={azureAccessStore.apiKey}
-              type="text"
-              placeholder={Locale.Settings.Token.Placeholder}
-              onChange={(e) => {
-                azureAccessStore.updateApiKey(e.currentTarget.value);
-              }}
-            />
-          </SettingItem>
+              <SettingItem
+                title={Locale.Settings.Prompt.List}
+                subTitle={Locale.Settings.Prompt.ListCount(
+                  builtinCount,
+                  customCount,
+                )}
+              >
+                <IconButton
+                  icon={<EditIcon />}
+                  text={Locale.Settings.Prompt.Edit}
+                  onClick={() => showToast(Locale.WIP)}
+                />
+              </SettingItem>
+            </List>
+            <List>
+              {enabledAccessControl ? (
+                <SettingItem
+                  title={Locale.Settings.AccessCode.Title}
+                  subTitle={Locale.Settings.AccessCode.SubTitle}
+                >
+                  <PasswordInput
+                    value={accessStore.accessCode}
+                    type="text"
+                    placeholder={Locale.Settings.AccessCode.Placeholder}
+                    onChange={(e) => {
+                      accessStore.updateCode(e.currentTarget.value);
+                    }}
+                  />
+                </SettingItem>
+              ) : (
+                <></>
+              )}
 
-          <SettingItem title="Azure Deployment ID">
-            <input
-              type="text"
-              value={azureAccessStore.deploymentId}
-              onChange={(e) => {
-                azureAccessStore.updateDeploymentId(e.currentTarget.value);
-              }}
-            ></input>
-          </SettingItem>
+              <SettingItem
+                title={Locale.Settings.Token.Title}
+                subTitle={Locale.Settings.Token.SubTitle}
+              >
+                <PasswordInput
+                  value={azureAccessStore.apiKey}
+                  type="text"
+                  placeholder={Locale.Settings.Token.Placeholder}
+                  onChange={(e) => {
+                    azureAccessStore.updateApiKey(e.currentTarget.value);
+                  }}
+                />
+              </SettingItem>
 
-          <SettingItem title="Azure api version">
-            <input
-              type="text"
-              value={azureAccessStore.apiVersion}
-              onChange={(e) => {
-                azureAccessStore.updateApiVersion(e.currentTarget.value);
-              }}
-            ></input>
-          </SettingItem>
+              <SettingItem title="Azure Deployment ID">
+                <input
+                  type="text"
+                  value={azureAccessStore.deploymentId}
+                  onChange={(e) => {
+                    azureAccessStore.updateDeploymentId(e.currentTarget.value);
+                  }}
+                ></input>
+              </SettingItem>
 
-          {/* <SettingItem
+              <SettingItem title="Azure api version">
+                <input
+                  type="text"
+                  value={azureAccessStore.apiVersion}
+                  onChange={(e) => {
+                    azureAccessStore.updateApiVersion(e.currentTarget.value);
+                  }}
+                ></input>
+              </SettingItem>
+
+              {/* <SettingItem
             title={Locale.Settings.Usage.Title}
             subTitle={
               showUsage
@@ -401,126 +409,130 @@ export function Settings(props: { closeSettings: () => void }) {
             )}
           </SettingItem> */}
 
-          <SettingItem
-            title={Locale.Settings.HistoryCount.Title}
-            subTitle={Locale.Settings.HistoryCount.SubTitle}
-          >
-            <InputRange
-              title={config.historyMessageCount.toString()}
-              value={config.historyMessageCount}
-              min="0"
-              max="25"
-              step="2"
-              onChange={(e) =>
-                updateConfig(
-                  (config) =>
-                    (config.historyMessageCount = e.target.valueAsNumber),
-                )
-              }
-            ></InputRange>
-          </SettingItem>
+              <SettingItem
+                title={Locale.Settings.HistoryCount.Title}
+                subTitle={Locale.Settings.HistoryCount.SubTitle}
+              >
+                <InputRange
+                  title={config.historyMessageCount.toString()}
+                  value={config.historyMessageCount}
+                  min="0"
+                  max="25"
+                  step="2"
+                  onChange={(e) =>
+                    updateConfig(
+                      (config) =>
+                        (config.historyMessageCount = e.target.valueAsNumber),
+                    )
+                  }
+                ></InputRange>
+              </SettingItem>
 
-          <SettingItem
-            title={Locale.Settings.CompressThreshold.Title}
-            subTitle={Locale.Settings.CompressThreshold.SubTitle}
-          >
-            <input
-              type="number"
-              min={500}
-              max={4000}
-              value={config.compressMessageLengthThreshold}
-              onChange={(e) =>
-                updateConfig(
-                  (config) =>
-                    (config.compressMessageLengthThreshold =
-                      e.currentTarget.valueAsNumber),
-                )
-              }
-            ></input>
-          </SettingItem>
-        </List>
+              <SettingItem
+                title={Locale.Settings.CompressThreshold.Title}
+                subTitle={Locale.Settings.CompressThreshold.SubTitle}
+              >
+                <input
+                  type="number"
+                  min={500}
+                  max={4000}
+                  value={config.compressMessageLengthThreshold}
+                  onChange={(e) =>
+                    updateConfig(
+                      (config) =>
+                        (config.compressMessageLengthThreshold =
+                          e.currentTarget.valueAsNumber),
+                    )
+                  }
+                ></input>
+              </SettingItem>
+            </List>
 
-        <List>
-          <SettingItem title={Locale.Settings.Model}>
-            <select
-              value={config.modelConfig.model}
-              onChange={(e) => {
-                updateConfig(
-                  (config) =>
-                    (config.modelConfig.model = ModalConfigValidator.model(
-                      e.currentTarget.value,
-                    )),
-                );
-              }}
-            >
-              {ALL_MODELS.map((v) => (
-                <option value={v.name} key={v.name} disabled={!v.available}>
-                  {v.name}
-                </option>
-              ))}
-            </select>
-          </SettingItem>
-          <SettingItem
-            title={Locale.Settings.Temperature.Title}
-            subTitle={Locale.Settings.Temperature.SubTitle}
-          >
-            <InputRange
-              value={config.modelConfig.temperature?.toFixed(1)}
-              min="0"
-              max="2"
-              step="0.1"
-              onChange={(e) => {
-                updateConfig(
-                  (config) =>
-                    (config.modelConfig.temperature =
-                      ModalConfigValidator.temperature(
-                        e.currentTarget.valueAsNumber,
-                      )),
-                );
-              }}
-            ></InputRange>
-          </SettingItem>
-          <SettingItem
-            title={Locale.Settings.MaxTokens.Title}
-            subTitle={Locale.Settings.MaxTokens.SubTitle}
-          >
-            <input
-              type="number"
-              min={100}
-              max={32000}
-              value={config.modelConfig.max_tokens}
-              onChange={(e) =>
-                updateConfig(
-                  (config) =>
-                    (config.modelConfig.max_tokens =
-                      ModalConfigValidator.max_tokens(
-                        e.currentTarget.valueAsNumber,
-                      )),
-                )
-              }
-            ></input>
-          </SettingItem>
-          <SettingItem
-            title={Locale.Settings.PresencePenlty.Title}
-            subTitle={Locale.Settings.PresencePenlty.SubTitle}
-          >
-            <InputRange
-              value={config.modelConfig.presence_penalty?.toFixed(1)}
-              min="-2"
-              max="2"
-              step="0.5"
-              onChange={(e) => {
-                updateConfig(
-                  (config) =>
-                    (config.modelConfig.presence_penalty =
-                      ModalConfigValidator.presence_penalty(
-                        e.currentTarget.valueAsNumber,
-                      )),
-                );
-              }}
-            ></InputRange>
-          </SettingItem>
-        </List>
+            <List>
+              <SettingItem title={Locale.Settings.Model}>
+                <select
+                  value={config.modelConfig.model}
+                  onChange={(e) => {
+                    updateConfig(
+                      (config) =>
+                        (config.modelConfig.model = ModalConfigValidator.model(
+                          e.currentTarget.value,
+                        )),
+                    );
+                  }}
+                >
+                  {ALL_MODELS.map((v) => (
+                    <option value={v.name} key={v.name} disabled={!v.available}>
+                      {v.name}
+                    </option>
+                  ))}
+                </select>
+              </SettingItem>
+              <SettingItem
+                title={Locale.Settings.Temperature.Title}
+                subTitle={Locale.Settings.Temperature.SubTitle}
+              >
+                <InputRange
+                  value={config.modelConfig.temperature?.toFixed(1)}
+                  min="0"
+                  max="2"
+                  step="0.1"
+                  onChange={(e) => {
+                    updateConfig(
+                      (config) =>
+                        (config.modelConfig.temperature =
+                          ModalConfigValidator.temperature(
+                            e.currentTarget.valueAsNumber,
+                          )),
+                    );
+                  }}
+                ></InputRange>
+              </SettingItem>
+              <SettingItem
+                title={Locale.Settings.MaxTokens.Title}
+                subTitle={Locale.Settings.MaxTokens.SubTitle}
+              >
+                <input
+                  type="number"
+                  min={100}
+                  max={32000}
+                  value={config.modelConfig.max_tokens}
+                  onChange={(e) =>
+                    updateConfig(
+                      (config) =>
+                        (config.modelConfig.max_tokens =
+                          ModalConfigValidator.max_tokens(
+                            e.currentTarget.valueAsNumber,
+                          )),
+                    )
+                  }
+                ></input>
+              </SettingItem>
+              <SettingItem
+                title={Locale.Settings.PresencePenlty.Title}
+                subTitle={Locale.Settings.PresencePenlty.SubTitle}
+              >
+                <InputRange
+                  value={config.modelConfig.presence_penalty?.toFixed(1)}
+                  min="-2"
+                  max="2"
+                  step="0.5"
+                  onChange={(e) => {
+                    updateConfig(
+                      (config) =>
+                        (config.modelConfig.presence_penalty =
+                          ModalConfigValidator.presence_penalty(
+                            e.currentTarget.valueAsNumber,
+                          )),
+                    );
+                  }}
+                ></InputRange>
+              </SettingItem>
+            </List>
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
     </ErrorBoundary>
   );
