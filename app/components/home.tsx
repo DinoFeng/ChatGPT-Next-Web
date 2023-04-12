@@ -2,7 +2,7 @@
 
 require("../polyfill");
 
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { IconButton } from "./button";
 import styles from "./home.module.scss";
