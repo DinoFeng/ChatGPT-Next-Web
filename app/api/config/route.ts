@@ -8,6 +8,8 @@ const serverConfig = getServerSideConfig();
 // 警告！不要在这里写入任何敏感信息！
 const DANGER_CONFIG = {
   needCode: serverConfig.needCode,
+  isAdvanced: serverConfig.isAdvanced,
+  defaultAccessCode: serverConfig.defaultAccessCode,
 };
 
 declare global {
@@ -17,6 +19,8 @@ declare global {
 export async function POST(req: NextRequest) {
   return NextResponse.json({
     needCode: serverConfig.needCode,
+    isAdvanced: serverConfig.isAdvanced,
+    defaultAccessCode: serverConfig.defaultAccessCode,
   });
 }
 

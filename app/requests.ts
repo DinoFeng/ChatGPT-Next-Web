@@ -11,6 +11,11 @@ import { showToast } from "./components/ui-lib";
 
 const TIME_OUT_MS = 60000;
 
+const getAzureConfig = (): string => {
+  const accessStore = useAccessStore.getState();
+  return accessStore.getAzureConfig();
+};
+
 const makeRequestParam = (
   messages: Message[],
   options?: {
@@ -47,13 +52,13 @@ function getHeaders() {
   let headers: Record<string, string> = {};
 
   if (accessStore.enabledAccessControl()) {
-    headers["access-code"] = accessStore.accessCode;
+    // headers["access-code"] = accessStore.accessCode;
+    headers["access-code"] = accessStore.getAccessCode();
   }
 
   if (accessStore.token && accessStore.token.length > 0) {
     headers["token"] = accessStore.token;
   }
-
   return headers;
 }
 
@@ -64,6 +69,7 @@ export function requestOpenaiClient(path: string) {
       headers: {
         "Content-Type": "application/json",
         path,
+        azureSetting: getAzureConfig(),
         ...getHeaders(),
       },
       body: body && JSON.stringify(body),
@@ -166,6 +172,7 @@ export async function requestChatStream(
       headers: {
         "Content-Type": "application/json",
         path: "v1/chat/completions",
+        azureSetting: getAzureConfig(),
         ...getHeaders(),
       },
       body: JSON.stringify(req),

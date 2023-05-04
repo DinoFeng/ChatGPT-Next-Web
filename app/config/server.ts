@@ -1,4 +1,5 @@
 import md5 from "spark-md5";
+import { IS_ADVANCED, DEF_ACCESS_CODE } from "./azureConfig";
 
 declare global {
   namespace NodeJS {
@@ -7,6 +8,8 @@ declare global {
       CODE?: string;
       PROXY_URL?: string;
       VERCEL?: string;
+      IS_ADVANCED?: string;
+      DEF_ACCESS_CODE?: string;
     }
   }
 }
@@ -38,5 +41,7 @@ export const getServerSideConfig = () => {
     needCode: ACCESS_CODES.size > 0,
     proxyUrl: process.env.PROXY_URL,
     isVercel: !!process.env.VERCEL,
+    isAdvanced: IS_ADVANCED,
+    defaultAccessCode: DEF_ACCESS_CODE,
   };
 };
