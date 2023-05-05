@@ -33,12 +33,9 @@ export function Loading(props: { noLogo?: boolean }) {
   );
 }
 
-const Settings = dynamic(
-  async () => (await import("./azure-settings")).Settings,
-  {
-    loading: () => <Loading noLogo />,
-  },
-);
+const Settings = dynamic(async () => (await import("./settings")).Settings, {
+  loading: () => <Loading noLogo />,
+});
 
 const Chat = dynamic(async () => (await import("./chat")).Chat, {
   loading: () => <Loading noLogo />,

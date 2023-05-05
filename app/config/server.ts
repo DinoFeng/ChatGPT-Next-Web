@@ -10,6 +10,7 @@ declare global {
       VERCEL?: string;
       IS_ADVANCED?: string;
       DEF_ACCESS_CODE?: string;
+      HIDE_USER_API_KEY?: string; // disable user's api key input
     }
   }
 }
@@ -43,5 +44,6 @@ export const getServerSideConfig = () => {
     isVercel: !!process.env.VERCEL,
     isAdvanced: IS_ADVANCED,
     defaultAccessCode: DEF_ACCESS_CODE,
+    hideUserApiKey: !!process.env.HIDE_USER_API_KEY,
   };
 };

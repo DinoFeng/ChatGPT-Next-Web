@@ -10,18 +10,15 @@ const DANGER_CONFIG = {
   needCode: serverConfig.needCode,
   isAdvanced: serverConfig.isAdvanced,
   defaultAccessCode: serverConfig.defaultAccessCode,
+  hideUserApiKey: serverConfig.hideUserApiKey,
 };
 
 declare global {
   type DangerConfig = typeof DANGER_CONFIG;
 }
 
-export async function POST(req: NextRequest) {
-  return NextResponse.json({
-    needCode: serverConfig.needCode,
-    isAdvanced: serverConfig.isAdvanced,
-    defaultAccessCode: serverConfig.defaultAccessCode,
-  });
+export async function POST() {
+  return NextResponse.json(DANGER_CONFIG);
 }
 
 export const runtime = "edge";

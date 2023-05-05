@@ -1,7 +1,7 @@
 import { createParser } from "eventsource-parser";
 import { NextRequest } from "next/server";
 import { requestOpenai } from "../common";
-import { createAzureStream } from "./azureStream";
+// import { createAzureStream } from "./azureStream";
 
 async function createStream(req: NextRequest) {
   const encoder = new TextEncoder();
@@ -50,7 +50,7 @@ async function createStream(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const stream = await createAzureStream(req);
+    const stream = await createStream(req);
     return new Response(stream);
   } catch (error) {
     console.error("[Chat Stream]", error);

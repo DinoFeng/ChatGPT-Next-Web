@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requestOpenai } from "../azure-common";
+import { requestOpenai } from "../common";
 
 async function makeRequest(req: NextRequest) {
   try {
