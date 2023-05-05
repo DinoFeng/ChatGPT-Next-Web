@@ -12,6 +12,11 @@ import { ACCESS_CODE_PREFIX } from "./constant";
 
 const TIME_OUT_MS = 60000;
 
+const getAzureConfig = (): string => {
+  const accessStore = useAccessStore.getState();
+  return accessStore.getAzureConfig();
+};
+
 const makeRequestParam = (
   messages: Message[],
   options?: {
@@ -55,13 +60,13 @@ function getHeaders() {
     headers.Authorization = makeBearer(accessStore.token);
   } else if (
     accessStore.enabledAccessControl() &&
-    validString(accessStore.accessCode)
+    validString(accessStore.getAccessCode())
   ) {
     headers.Authorization = makeBearer(
-      ACCESS_CODE_PREFIX + accessStore.accessCode,
+      ACCESS_CODE_PREFIX + accessStore.getAccessCode(),
     );
   }
-
+  headers.azureSetting = getAzureConfig();
   return headers;
 }
 

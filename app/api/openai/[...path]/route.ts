@@ -1,7 +1,7 @@
 import { createParser } from "eventsource-parser";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../auth";
-import { requestOpenai } from "../../common";
+import { requestOpenai, createStreamForAzure } from "../../azure-common";
 
 async function createStream(res: Response) {
   const encoder = new TextEncoder();
@@ -64,7 +64,7 @@ async function handle(
 
     // streaming response
     if (contentType.includes("stream")) {
-      const stream = await createStream(api);
+      const stream = await createStreamForAzure(api);
       const res = new Response(stream);
       res.headers.set("Content-Type", contentType);
       return res;

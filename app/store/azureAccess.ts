@@ -1,11 +1,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { BOT_HELLO } from "./chat";
 
 export interface AzureAccessControlStore {
   accessCode: string;
   token: string;
 
   needCode: boolean;
+  hideUserApiKey: boolean;
+  openaiUrl: string;
 
   updateToken: (_: string) => void;
   updateCode: (_: string) => void;
@@ -35,9 +38,11 @@ let fetchState = 0; // 0 not fetch, 1 fetching, 2 done
 export const useAzureAccessStore = create<AzureAccessControlStore>()(
   persist(
     (set, get) => ({
-      accessCode: "",
       token: "",
+      accessCode: "",
       needCode: true,
+      hideUserApiKey: false,
+      openaiUrl: "/api/openai/",
 
       sourceName: "",
       deploymentId: "",
@@ -46,15 +51,16 @@ export const useAzureAccessStore = create<AzureAccessControlStore>()(
       isAdvanced: false,
       defaultAccessCode: "",
 
-      updateToken(token: string) {
-        set((state) => ({ token }));
-      },
-      updateCode(code: string) {
-        set((state) => ({ accessCode: code }));
-      },
       enabledAccessControl() {
         get().fetch();
+
         return get().needCode;
+      },
+      updateCode(code: string) {
+        set(() => ({ accessCode: code }));
+      },
+      updateToken(token: string) {
+        set(() => ({ token }));
       },
       isAuthorized() {
         // has token or has code or disabled access control
@@ -73,8 +79,12 @@ export const useAzureAccessStore = create<AzureAccessControlStore>()(
         })
           .then((res) => res.json())
           .then((res: DangerConfig) => {
-            console.log("[azure Config] got config from server", res);
+            console.log("[Config] got config from server", res);
             set(() => ({ ...res }));
+
+            if ((res as any).botHello) {
+              BOT_HELLO.content = (res as any).botHello;
+            }
           })
           .catch(() => {
             console.error("[Config] failed to fetch config");
